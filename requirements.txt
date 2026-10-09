@@ -1,0 +1,14 @@
+fastapi[all]
+uvicorn
+jinja2
+sqlalchemy
+alembic
+httpx
+pydantic-settings
+pandas
+passlib[bcrypt]
+python-multipart
+resend
+apscheduler
+pytest
+pytest-asyncio

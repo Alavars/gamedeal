@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}My Wishlist - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">My Wishlist</h2>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-600">Logged in as <strong>{{ user.email }}</strong></span>
+            <a href="/auth/logout" class="text-sm text-red-600 hover:text-red-800">Logout</a>
+        </div>
+    </div>
+
+    {% if wishlists %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in wishlists %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+            <div class="flex">
+                <img src="{{ item.game.thumb_url }}" alt="{{ item.game.title }}" class="w-32 h-32 object-cover">
+                <div class="p-4 flex flex-col justify-between w-full">
+                    <h3 class="font-bold text-lg truncate" title="{{ item.game.title }}">{{ item.game.title }}</h3>
+                    <p class="text-sm text-gray-600 mt-2">Target Price: 
+                        {% if item.target_price %}
+                            <span class="font-bold text-green-600">${{ item.target_price }}</span>
+                        {% else %}
+                            <span class="italic text-gray-400">Any discount</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 flex justify-between items-center border-t border-gray-200">
+                <form action="/wishlist/remove/{{ item.id }}" method="POST">
+                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium">Remove from Wishlist</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg shadow-md p-10 text-center">
+        <p class="text-gray-500 text-lg mb-4">Your wishlist is empty.</p>
+        <a href="/" class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+            Find Games
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
