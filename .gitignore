@@ -1,0 +1,42 @@
+# Environment variables (SECRETS - DO NOT COMMIT)
+.env
+.env.*
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Node / React Dependencies & Build outputs
+frontend/node_modules/
+node_modules/
+frontend/dist/
+.npm
+npm-debug.log*
+
+# SQLite Database & local data
+data/*.db
+data/*.sqlite3
+*.db
+*.sqlite3
+
+# Python Bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor & OS files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

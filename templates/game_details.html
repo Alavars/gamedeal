@@ -28,7 +28,7 @@
             <ul class="space-y-3 mb-8">
                 {% for deal in game.deals %}
                 <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span class="font-medium text-gray-800">Store ID: {{ deal.storeID }}</span>
+                    <a href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2">{{ deal.store_name }}</a>
                     <div class="text-right">
                         <span class="font-bold text-lg text-blue-600">${{ deal.price }}</span>
                         {% if deal.retailPrice != deal.price %}
@@ -39,7 +39,7 @@
                 {% endfor %}
             </ul>
 
-            {% if user %}
+            {% if user_id %}
             <div class="bg-blue-50 border border-blue-200 p-5 rounded-lg shadow-sm">
                 <h4 class="font-bold text-blue-800 mb-2">Track this Game</h4>
                 <p class="text-sm text-blue-600 mb-4">Set a target price and we'll email you when it drops!</p>

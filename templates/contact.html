@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-8">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900">Contact Us</h1>
+    
+    <div class="prose prose-blue max-w-none text-gray-700 space-y-6">
+        <p class="text-lg">Have a question, suggestion, or found a bug? We'd love to hear from you!</p>
+        
+        <div class="bg-blue-50 border border-blue-100 p-6 rounded-lg mt-8">
+            <h2 class="text-xl font-semibold text-blue-900 mb-4">Get in Touch</h2>
+            <div class="flex items-center space-x-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <a href="mailto:support@gamedealpulse.com" class="text-blue-700 hover:underline font-medium text-lg">support@gamedealpulse.com</a>
+            </div>
+            <p class="text-sm text-blue-800">We typically respond within 24-48 hours.</p>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Frequently Asked Questions</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-bold text-gray-900">Why didn't I receive my price drop alert?</h3>
+                    <p class="text-sm">Please check your spam or junk folder. Also, ensure that the price dropped strictly <strong>below or equal to</strong> your set target price.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900">Which stores do you track?</h3>
+                    <p class="text-sm">We track over 30 verified digital stores including Steam, GOG, Epic Games, Humble Store, and GreenManGaming through the official CheapShark API.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

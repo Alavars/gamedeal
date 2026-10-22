@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-8">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900">Terms of Service</h1>
+    
+    <div class="prose prose-blue max-w-none text-gray-700 space-y-4">
+        <p><strong>Last Updated: October 2026</strong></p>
+        
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-2">1. Acceptance of Terms</h2>
+        <p>By accessing or using {{ app_name }}, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.</p>
+
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-2">2. Description of Service</h2>
+        <p>{{ app_name }} is a free platform that aggregates video game prices from various digital storefronts using the CheapShark API. We allow users to search for deals and set up automated email notifications for price drops.</p>
+
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-2">3. Pricing Accuracy</h2>
+        <p>While we strive for accuracy, the prices displayed on our platform are provided by third-party APIs (CheapShark) and may fluctuate. We do not guarantee the real-time accuracy of any price or deal. Final pricing is determined at the digital storefront's checkout page.</p>
+
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-2">4. User Accounts</h2>
+        <p>You are responsible for safeguarding the password that you use to access the service. You agree not to disclose your password to any third party. We cannot and will not be liable for any loss or damage arising from your failure to comply with these security obligations.</p>
+
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-2">5. Limitation of Liability</h2>
+        <p>{{ app_name }} is provided on an "AS IS" and "AS AVAILABLE" basis. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the service.</p>
+    </div>
+</div>
+{% endblock %}

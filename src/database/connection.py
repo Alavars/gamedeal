@@ -1,16 +1,16 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from src.config import settings
-import os
 
-db_path = settings.database_url.replace("sqlite:///", "")
-# Create directory if it doesn't exist
-os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
-
+# Create SQLite engine
 engine = create_engine(
-    settings.database_url, connect_args={"check_same_thread": False}
+    settings.database_url, 
+    connect_args={"check_same_thread": False} # Needed for SQLite
 )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()

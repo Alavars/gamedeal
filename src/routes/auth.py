@@ -1,63 +1,78 @@
-from fastapi import APIRouter, Request, Depends, Form, HTTPException, status
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from src.database.connection import get_db
 from src.database.models import User
-from src.utils.security import get_password_hash, verify_password
+from src.schemas.user import UserCreate, UserLogin, UserResponse
+from src.utils.security import get_password_hash, verify_password, get_current_user_id
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="templates")
 
-@router.get("/login", response_class=HTMLResponse)
-async def login_get(request: Request):
-    return templates.TemplateResponse("auth/login.html", {"request": request})
-
-@router.post("/login")
-async def login_post(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    user = db.query(User).filter(User.email == email).first()
-    if not user or not verify_password(password, user.password_hash):
-        return templates.TemplateResponse(
-            "auth/login.html", 
-            {"request": request, "error": "Invalid email or password"}
+@router.post("/register", status_code=status.HTTP_201_CREATED)
+async def register(payload: UserCreate, db: Session = Depends(get_db)):
+    # Check if user exists
+    user = db.query(User).filter(User.email == payload.email).first()
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
         )
-    
-    request.session["user_id"] = user.id
-    return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
-@router.get("/register", response_class=HTMLResponse)
-async def register_get(request: Request):
-    return templates.TemplateResponse("auth/register.html", {"request": request})
-
-@router.post("/register")
-async def register_post(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    existing_user = db.query(User).filter(User.email == email).first()
-    if existing_user:
-        return templates.TemplateResponse(
-            "auth/register.html", 
-            {"request": request, "error": "Email already registered"}
-        )
-    
-    hashed_password = get_password_hash(password)
-    new_user = User(email=email, password_hash=hashed_password)
+    # Create user
+    new_user = User(email=payload.email, password_hash=get_password_hash(payload.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    
-    request.session["user_id"] = new_user.id
-    return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
+    return {
+        "message": "User registered successfully",
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email
+        }
+    }
+
+@router.post("/login")
+async def login(payload: UserLogin, response: Response, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user or not verify_password(payload.password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
+
+    # Set cookie for session / browser support
+    response.set_cookie(
+        key="user_id",
+        value=str(user.id),
+        httponly=True,
+        samesite="lax",
+        path="/"
+    )
+
+    return {
+        "message": "Login successful",
+        "user": {
+            "id": user.id,
+            "email": user.email
+        },
+        "token": str(user.id)
+    }
+
+@router.post("/logout")
 @router.get("/logout")
-async def logout(request: Request):
-    request.session.clear()
-    return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+async def logout(response: Response):
+    response.delete_cookie(key="user_id", path="/")
+    return {"message": "Logged out successfully"}
+
+@router.get("/me", response_model=UserResponse)
+async def get_current_user_profile(
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return user

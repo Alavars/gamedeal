@@ -18,7 +18,7 @@
                 type="text" 
                 name="query"
                 hx-get="/deals/search"
-                hx-trigger="keyup changed delay:500ms"
+                hx-trigger="keyup changed delay:800ms"
                 hx-target="#search-results"
                 class="block w-full rounded-full border-gray-300 pl-11 pr-4 py-3 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder-gray-500" 
                 placeholder="Search for a game (e.g. Cyberpunk 2077)..."
@@ -28,6 +28,32 @@
 </div>
 
 <div id="search-results" class="mt-8">
-    <!-- Results will be injected here via HTMX -->
+    {% if top_deals %}
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">New & Trending Deals</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for game in top_deals %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden flex relative group">
+            <img src="{{ game.thumb }}" alt="{{ game.external }}" class="w-32 h-32 object-cover flex-none">
+            <div class="p-4 flex flex-col justify-between w-full min-w-0">
+                <h3 class="font-bold text-lg truncate" title="{{ game.external }}">{{ game.external }}</h3>
+                <p class="text-green-600 font-bold">Best Price: ${{ game.cheapest }} <a href="https://www.cheapshark.com/redirect?dealID={{ game.cheapestDealID }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-500 hover:text-blue-700 font-normal underline">via {{ game.cheapest_store_name }}</a></p>
+                <a href="/deals/{{ game.gameID }}" class="mt-2 text-sm text-center bg-blue-100 text-blue-700 py-1 rounded hover:bg-blue-200">View Details</a>
+            </div>
+            {% if user_id %}
+            <form hx-post="/wishlist/add" hx-swap="outerHTML" class="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                <input type="hidden" name="external_id" value="{{ game.gameID }}">
+                <input type="hidden" name="title" value="{{ game.external }}">
+                <input type="hidden" name="thumb_url" value="{{ game.thumb }}">
+                <button type="submit" class="text-gray-300 hover:text-yellow-400 bg-black bg-opacity-50 rounded-full p-1 transition-colors" title="Add to Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
