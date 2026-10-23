@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: gamedealpulse
+    runtime: docker
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: GameDealPulse
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./data/app.db
+      - key: CHEAPSHARK_BASE_URL
+        value: https://www.cheapshark.com/api/1.0
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SENDER_EMAIL
+        value: onboarding@resend.dev

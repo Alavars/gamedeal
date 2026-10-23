@@ -10,12 +10,14 @@ from src.main import app
 client = TestClient(app)
 
 def test_api():
-    print("1. Testing GET / (Root)")
+    print("1. Testing GET / (Root) & /api")
     res = client.get("/")
     assert res.status_code == 200, f"Expected 200, got {res.status_code}"
-    data = res.json()
+    api_res = client.get("/api")
+    assert api_res.status_code == 200, f"Expected 200, got {api_res.status_code}"
+    data = api_res.json()
     assert "endpoints" in data
-    print("   Root API OK:", data["app"])
+    print("   Root & /api OK:", data["app"])
 
     print("2. Testing CORS headers")
     res = client.options(
