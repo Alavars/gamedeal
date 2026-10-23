@@ -29,13 +29,12 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy source code and templates/static
+# Copy source code
 COPY src/ ./src/
-COPY static/ ./static/
 COPY templates/ ./templates/
 
-# Ensure directory for SQLite database
-RUN mkdir -p /app/data
+# Ensure directories for SQLite database and static assets
+RUN mkdir -p /app/data /app/static
 
 # Copy built frontend assets from Stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
